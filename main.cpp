@@ -27,9 +27,10 @@
 如果是第一次使用，需要提示输入5种品牌的单车的品牌名称、投放量和投放地点，借此对5个品牌进行初始化；
 菜单：1.租车 2.还车 3.使用情况查询 4.车辆报修 5.数据总览 6.客户信息查询
 数据结构：
-1.用户{UID,ACCOUNT,PASSWORD,USAGE,TEL,AVGTIME,TOTALMILE,}
-2.车辆{UID,USAGE,PLACE,HEALTH,TIME}
-3.公司{UID,BIKEUIDSUP,BIKEUIDINF,HEALTHBIKE}
+1.sturct USER{int UID,char ACCOUNTNAME[20],char PASSWORD[20],float USELENTH,char TELNUMBER[11],int HABBITTIME[24],int TOTALMILE,float AVERAGETIME,*struct USER next}
+2.struct BIKE{int UID,int HOST(归属公司）,bool USAGE,char PLACE,bool HEALTH,float TIME}
+3.单车品牌{UID,TOTALBIKE,HEALTHBIKE,BIKEINUSE,USETIME,PROFIT,USEFREQUENCY,PAYRATIO}
+4.struct LOGS{int HOST,int BKIE,char START,char END,float TIME}
 功能：
 1.租车：	1.1未注册：提示注册。写入账号、密码到文件user.data。然后跳转回租车1.
 		1.2已注册：	1.2.1：输入“BACK”，退回到1.租车
