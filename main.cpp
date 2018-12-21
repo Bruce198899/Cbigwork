@@ -20,9 +20,13 @@
 6)	文件，用来保存某些数据；
 7)	更多的功能使用，请根据自己程序的情况自由发挥。
 */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include<windows.h> 
+#define ； ;//避免冒号错误
+
 /*
 如果是第一次使用，需要提示输入5种品牌的单车的品牌名称、投放量和投放地点，借此对5个品牌进行初始化；
 菜单：1.租车 2.还车 3.使用情况查询 4.车辆报修 5.数据总览 6.客户信息查询
@@ -46,18 +50,18 @@
 		1.3查询到该车不存在，返回提示信息
 
 */
-struct USER 
+struct USER //用户链表
 {
-	int UID;
-	char Account_Name[20];
-	char Password[20];
-	float Total_Use_Time;
-	float Total_Use_Miles;
+	int UID;//用户UID
+	char Account_Name[20];//用户名
+	char Password[20];//用户密码
+	float Total_Use_Time;//总使用时间
+	float Total_Use_Miles;//
 	char Phone_Number[12];
 	int Habbit_Time[24];
 	float Average_Time;
-	struct *USER Next;
-}
+	struct USER *Next;
+};
 struct BIKE
 {
 	int UID;
@@ -67,7 +71,7 @@ struct BIKE
 	bool Health;
 	float Use_Time;
 	struct BIKE *Next;
-}
+};
 struct COMPANY
 {
 	int UID;
@@ -80,7 +84,7 @@ struct COMPANY
 	float Payment_Per_Hour;
 	float Payment_Ratio;
 	struct COMPANY *Next;
-}
+};
 struct LOGS//日志，完成交易时产生。
 {
 	int Company;
@@ -89,6 +93,62 @@ struct LOGS//日志，完成交易时产生。
 	float End_Place[2];//地理坐标
 	float Time;
 	struct LOGS *Next;
+};
+
+/*声明函数区*/
+int Menu_Set();//菜单栏循环嵌套体
+void User_Reg();
+int User_Log();
+//int Initial();//数据公司、单车数据初始化
+FILE *COMPANYDATABASE;
+
+
+/*主函数及子函数区*/
+int main()
+{
+	system("color 0A");
+	//while((COMPANYDATABASE=fopen("COMPANYDATABASE","r"))==NULL)
+	//	Initial();
+	Menu_Set();
+	return 0;
 }
 
+int Menu_Set()
+{
+	printf("┌───────────────────────────────────────────────────────────────────────┐\n│                                                                       │\n");
+	printf("│                            共享单车管理系统                           │\n│                                                                       │\n");
+	printf("│                    By BruceZTY   All Rights Reserved                  │\n│                                                                       │\n");
+	printf("│                              1.用户用车                               │\n│                                                                       │\n");
+	printf("│                              2.用户还车                               │\n│                                                                       │\n");
+	printf("│                              3.车辆报修                               │\n│                                                                       │\n");
+	printf("│                          4.车辆使用情况查询                           │\n│                                                                       │\n");
+	printf("│                          5.服务公司数据总览                           │\n│                                                                       │\n");
+	printf("│                          6.单车用户数据总览                           │\n│                                                                       │\n");
+	printf("│                              7.退出程序                               │\n│                                                                       │\n");
+	printf("└───────────────────────────────────────────────────────────────────────┘\n");
+	printf("请输入要选择的功能前的数字：");
+	int choice=0;
+	scanf("%d",&choice);
+	switch(choice)
+	{
+	case 1:
+		break;
+	case 2:
+		break;
+	case 3:
+		break;
+	case 4:
+		break;
+	case 5:
+		break;
+	case 6:
+		break;
+	case 7:
+		return 0;
+	default://其他不知名的情况
+			;
+	}
+	Menu_Set();
+	return 0;
+}
 
