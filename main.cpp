@@ -46,3 +46,49 @@
 		1.3查询到该车不存在，返回提示信息
 
 */
+struct USER 
+{
+	int UID;
+	char Account_Name[20];
+	char Password[20];
+	float Total_Use_Time;
+	float Total_Use_Miles;
+	char Phone_Number[12];
+	int Habbit_Time[24];
+	float Average_Time;
+	struct *USER Next;
+}
+struct BIKE
+{
+	int UID;
+	int Host_Company_UID;
+	bool Usage;
+	float Place[2];//地理坐标
+	bool Health;
+	float Use_Time;
+	struct BIKE *Next;
+}
+struct COMPANY
+{
+	int UID;
+	int Total_Bike;
+	int Healthy_Bike;
+	int Bike_In_Use;
+	float Use_Time;
+	float Profit;
+	int Total_Use_Time;
+	float Payment_Per_Hour;
+	float Payment_Ratio;
+	struct COMPANY *Next;
+}
+struct LOGS//日志，完成交易时产生。
+{
+	int Company;
+	int Bike;
+	float Start_Place[2];
+	float End_Place[2];//地理坐标
+	float Time;
+	struct LOGS *Next;
+}
+
+
