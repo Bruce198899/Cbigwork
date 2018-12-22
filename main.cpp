@@ -1,55 +1,9 @@
-﻿/*
-目前大家比较熟悉共享单车的使用。请编制一个共享单车的管理程序，实现如下基本功能。假设有5种品牌的共享单车（品牌内容自定）。
-	针对该5种品牌的共享单车，自行设计一套包含每种单车的品牌名称、投放量、投放点、某一时间点的在用数量、每辆车的每天骑行
-	次数及单次里程和总里程、开锁过程中发现的损坏次数等信息(所有相关数据均自行设计)的数据结构；
-	随着骑行活动的开展，待使用单车的数量将发生变化。要求能对每种单车的使用数量及待使用的数量进行查询统计并输出；
-	对于某一投放点的某一品牌的单车，如果无备用车（待使用的车均为备用车），或备用车均为损坏的车，系统应能给出信息提示；
-	对于损坏报修的车辆，系统能够进行及时的统计，并能在投放数量中削减损坏车辆的数量，形成真实的有效投放量；
-//	能够对客户信息进行处理，包括注册的用户名、电话号码、骑行里程、骑行习惯（比如70%以上的出行时间集中在某个时间段，时间
-	段按时钟整点划分）、每天平均的骑行时间等；
-	该系统能进行当日使用状况的统计，请用链表排序（排序算法不限）提示交易使用次数排在前三名的单车品牌；
-	假设每种单车的使用是收费的，如第一个小时是免费的，第二个小时开始每小时收费0.5元，各品牌可各自推出优惠收费条件（优惠
-	条件请自定义），然后根据假设的使用情况，统计出各种品牌的日营业额，并对各品牌的受欢迎程度进行排序。
-
-三、要求使用的知识点：
-1)	变量、结构体或联合体；
-2)	循环控制、条件判断；
-3)	数组、函数；
-4)	排序与查找算法及其实现；
-5)	指针，用来操作字符串或其它特定内容；
-6)	文件，用来保存某些数据；
-7)	更多的功能使用，请根据自己程序的情况自由发挥。
-*/
-
-#include <stdio.h>
+﻿#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include<windows.h> 
 #define ； ;//避免冒号错误
 
-/*
-如果是第一次使用，需要提示输入5种品牌的单车的品牌名称、投放量和投放地点，借此对5个品牌进行初始化；
-菜单：1.租车 2.还车 3.使用情况查询 4.车辆报修 5.数据总览 6.客户信息查询
-数据结构：
-1.sturct USER{int UID,char ACCOUNTNAME[20],char PASSWORD[20],float USELENTH,char TELNUMBER[11],int HABBITTIME[24],int TOTALMILE,float AVERAGETIME,*struct USER next}
-2.struct BIKE{int UID,int HOST(归属公司）,bool USAGE,char PLACE,bool HEALTH,float TIME}
-3.单车品牌{UID,TOTALBIKE,HEALTHBIKE,BIKEINUSE,USETIME,PROFIT,USEFREQUENCY,PAYRATIO}
-4.struct LOGS{int HOST,int BKIE,char START,char END,float TIME}
-功能：
-1.租车：	1.1未注册：提示注册。写入账号、密码到文件user.data。然后跳转回租车1.
-		1.2已注册：	1.2.1：输入“BACK”，退回到1.租车
-					1.2.2：账号密码输入错误，提示密码错误后跳转到1.2
-					1.2.3：输入正确用户信息正确，自动匹配UID后，带入1.3用车程序
-		1.3用车：参数：用车用户UID.
-					1.3.1：输入了可用的车辆或品牌的UID，改变用车状态，用户UID不可再用车。对车辆UID赋予使用属性，不可再使用。
-					1.3.2：输入的UID在使用状态或者已经损坏，提示后返回1.3。
-					1.3.3：输入“BACK”，则返回1.租车
-2.车辆报修：不验证用户UID
-		1.1查询到该车已经损坏，返回提示信息后回道主菜单
-		1.2查询到该车未损坏，给该车结构体的HEALTH赋予损坏属性
-		1.3查询到该车不存在，返回提示信息
-
-*/
 struct USER //用户链表
 {
 	int UID;//用户UID
@@ -95,20 +49,41 @@ struct LOGS//日志，完成交易时产生。
 	struct LOGS *Next;
 };
 
-/*声明函数区*/
-int Menu_Set();//菜单栏循环嵌套体
-void User_Reg();
-int User_Log();
-//int Initial();//数据公司、单车数据初始化
-FILE *COMPANYDATABASE;
+struct USER *USER_CRUSOR;
+struct USER *USER_HEAD;
+struct BIKE *BIKE_CRUSOR;
+struct BIKE *BIKE_HEAD;
+struct COMPANY *COMPANY_CRUSOR;
+struct COMPANY *COMPANY_HEAD;
+struct LOGS *LOGS_CRUSOR;
+struct LOGS *LOGS_HEAD;
 
+/*声明函数区*/
+int Initial();//初始化数据
+int Menu_Set();//菜单栏循环嵌套体
+int User_Reg();//返回1，注册成功
+int User_Log();//返回1，登陆成功，不反悔用户指针，用户指针全局存储
+int Use_Bike(struct USER *USER);
+void Return_Bike();
+void Call_Fix();
+void Data_Bike();
+void Data_Company();
+void Data_User();
+FILE *COMPANYDATABASE;
+struct USER *PTRUSER;//全局用户指针
 
 /*主函数及子函数区*/
 int main()
 {
 	system("color 0A");
-	//while((COMPANYDATABASE=fopen("COMPANYDATABASE","r"))==NULL)
-	//	Initial();
+	//while(Initial()!=1)
+	//{
+	///	printf("应用程序初始化失败，请问您是否要再次尝试初始化？如果是请，输入Y；如果否，请输入N：");
+	//	char Option;
+	//	scanf("%c",&Option);
+	//	if(Option=='N')
+	//		break;
+	//}
 	Menu_Set();
 	return 0;
 }
@@ -132,23 +107,95 @@ int Menu_Set()
 	switch(choice)
 	{
 	case 1:
-		break;
+		{
+			Use_Bike(PTRUSER);
+			break;
+		}
 	case 2:
-		break;
+		{
+			//Return_Bike();
+			break;
+		}
 	case 3:
-		break;
+		{
+			//Call_Fix();
+			break;
+		}
 	case 4:
-		break;
+		{
+			//Data_Bike();
+			break;
+		}
 	case 5:
-		break;
+		{
+			//Data_Company();
+			break;
+		}
 	case 6:
-		break;
+		{
+			//Data_User();
+			break;
+		}
 	case 7:
 		return 0;
 	default://其他不知名的情况
-			;
+		{
+			choice = 0;
+			fflush(stdin);
+			printf("\n您没有输入正确的操作指令！将返回主菜单\n\n");
+		};
 	}
 	Menu_Set();
 	return 0;
 }
+int Use_Bike(struct USER *USER)
+{
+	if(USER==NULL)
+		{
+			printf("\n您目前没有登陆，如果要登陆，请输入Y；如果您还没有注册，请输入R；如果不想登陆，则您不能用车，请输入N：");
+			fflush(stdin);
+			char Choice = 0;
+			scanf("%c",&Choice);
+			if(Choice=='Y')
+			{
+				if(User_Log()==1)
+					Use_Bike(PTRUSER);
+				else 
+				{
+					printf("\n登陆失败！将回到用车菜单！\n");
+					Use_Bike(NULL);
+				}
+			}
+			else if(Choice=='R')
+				{
+					if(User_Reg()==1)
+						Use_Bike(PTRUSER);
+					else 
+					{
+						printf("\n注册失败！将回到用车菜单\n");
+						Use_Bike(NULL);
+					}
+			}
+			else 
+			{
+				printf("\n您选择退出或输入了不合法字符，将返回主菜单！\n");
+				return 0;
+			} 
+	}
 
+}
+int User_Reg()
+{
+	char User_Expect_USERNAME[20];
+	printf("请输入要注册的用户名（不要输入空格等非法字符）：");
+	scanf("%s",User_Expect_USERNAME);
+
+
+	
+
+	return 0;
+}
+int User_Log()
+{
+	return 0;
+}
