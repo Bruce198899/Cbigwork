@@ -311,14 +311,6 @@ FILE *USER_array,*COMPANY_array,*BIKE_array,*USER_NUM;
 			BIKE_CURSOR=BIKE_CURSOR->Next;
 		}
 		fwrite(&usernum,sizeof(int),1,USER_NUM);
-		remove("USERDATA");
-		remove("COMPANYDATA");
-		remove("BIKEDATA");
-		remove("USERNUM");
-		rename("USERDATA_NEW","USERDATA");
-		rename("COMPANYDATA_NEW","COMPANYDATA");
-		rename("BIKEDATA_NEW","BIKEDATA");
-		rename("USERNUM_NEW","USERNUM");
 		return 1;
 	}
 	return 0;
